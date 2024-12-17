@@ -17,7 +17,7 @@ void insertion_sort(int a[], int n)
             j--;
             swap++;
         }
-        compare++
+        compare++;
         a[j + 1] = key;
         
     }
