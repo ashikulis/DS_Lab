@@ -17,8 +17,9 @@ void insertion_sort(int a[], int n)
             j--;
             swap++;
         }
+        compare++
         a[j + 1] = key;
-        swap++; 
+         
     }
     cout << endl << "Swap Number= " << swap << endl << "Comparison number= " << compare << endl;
 }
