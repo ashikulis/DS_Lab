@@ -1,0 +1,2 @@
+Array: 2 72 64 89 93 45 
+Number not found
