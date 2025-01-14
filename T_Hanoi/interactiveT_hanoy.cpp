@@ -1,22 +1,29 @@
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
 
 struct Stack {
     int top;
     int capacity;
-    char* array;
+    int* array;
 
-    Stack(int size) {
-        capacity = size;
+    Stack(int cap) {
+        capacity = cap;
         top = -1;
-        array = new char[size];
+        array = new int[capacity];
     }
 
-    void push(char item) {
-        array[++top] = item;
+    ~Stack() {
+        delete[] array;
     }
 
-    char pop() {
+    void push(int item) {
+        if (top < capacity - 1) {
+            array[++top] = item;
+        }
+    }
+
+    int pop() {
+        if (top == -1) return INT_MIN;
         return array[top--];
     }
 
@@ -25,28 +32,54 @@ struct Stack {
     }
 };
 
+void moveDisk(int disk, char fromRod, char toRod) {
+    cout << "Move disk " << disk << " from rod " << fromRod << " to rod " << toRod << endl;
+}
+
 void iterativeHanoi(int n, char source, char target, char auxiliary) {
-    int totalMoves = (1 << n) - 1; // 2^n - 1
-    for (int i = 1; i <= totalMoves; i++) {
-        char from = source, to = target;
-        if (i % 3 == 1) {
-            to = target;
-        } else if (i % 3 == 2) {
-            to = auxiliary;
+    Stack src(n), dest(n), aux(n);
+
+    // Initialize source rod
+    for (int i = n; i >= 1; i--)
+        src.push(i);
+
+    char rods[3] = {source, target, auxiliary};
+    Stack* stacks[3] = {&src, &dest, &aux};
+
+    int totalMoves = (1 << n) - 1; // Total moves = 2^n - 1
+    for (int move = 1; move <= totalMoves; move++) {
+        int fromIdx = (move & (move - 1)) % 3;
+        int toIdx = ((move | (move - 1)) + 1) % 3;
+
+        Stack* fromStack = stacks[fromIdx];
+        Stack* toStack = stacks[toIdx];
+        
+        int fromDisk = fromStack->isEmpty() ? INT_MAX : fromStack->pop();
+        int toDisk = toStack->isEmpty() ? INT_MAX : toStack->pop();
+
+        // Determine move direction
+        if (fromDisk > toDisk) {
+            fromStack->push(fromDisk);
+            fromStack->push(toDisk);
+            moveDisk(toDisk, rods[toIdx], rods[fromIdx]);
         } else {
-            to = source;
+            toStack->push(toDisk);
+            toStack->push(fromDisk);
+            moveDisk(fromDisk, rods[fromIdx], rods[toIdx]);
         }
-        cout << "Move disk " << (i % n + 1) << " from " << from << " to " << to << std::endl;
     }
 }
 
 int main() {
     int n;
-    char rod1, rod2, rod3;
+    char source, target, auxiliary;
+
     cout << "Enter the number of disks: ";
     cin >> n;
-    cout << "Enter names of the rods (3 characters): ";
-    cin >> rod1 >> rod2 >> rod3;
-    iterativeHanoi(n, rod1, rod2, rod3);
+    cout << "Enter the names of the rods (source, target, auxiliary): ";
+    cin >> source >> target >> auxiliary;
+
+    iterativeHanoi(n, source, target, auxiliary);
+
     return 0;
 }
