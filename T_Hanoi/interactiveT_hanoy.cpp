@@ -39,14 +39,14 @@ void moveDisk(int disk, char fromRod, char toRod) {
 void iterativeHanoi(int n, char source, char target, char auxiliary) {
     Stack src(n), dest(n), aux(n);
 
-    // Initialize source rod
+  
     for (int i = n; i >= 1; i--)
         src.push(i);
 
     char rods[3] = {source, target, auxiliary};
     Stack* stacks[3] = {&src, &dest, &aux};
 
-    int totalMoves = (1 << n) - 1; // Total moves = 2^n - 1
+    int totalMoves = (1 << n) - 1; 
     for (int move = 1; move <= totalMoves; move++) {
         int fromIdx = (move & (move - 1)) % 3;
         int toIdx = ((move | (move - 1)) + 1) % 3;
@@ -57,7 +57,7 @@ void iterativeHanoi(int n, char source, char target, char auxiliary) {
         int fromDisk = fromStack->isEmpty() ? INT_MAX : fromStack->pop();
         int toDisk = toStack->isEmpty() ? INT_MAX : toStack->pop();
 
-        // Determine move direction
+       
         if (fromDisk > toDisk) {
             fromStack->push(fromDisk);
             fromStack->push(toDisk);
